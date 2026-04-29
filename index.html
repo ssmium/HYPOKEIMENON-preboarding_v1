@@ -110,6 +110,11 @@
       line-height:1.6;
     }
 
+    .char-textarea{
+      min-height:92px;
+      background:#fcfcff;
+    }
+
     input[type="text"]:focus,
     textarea:focus,
     select:focus{
@@ -130,18 +135,26 @@
       line-height:1.5;
     }
 
-    .fixed-box{
+    .character-box{
       border:1px solid #c7d2fe;
       background:#f8faff;
       border-radius:14px;
       padding:14px;
-      line-height:1.8;
-      font-size:14px;
     }
 
-    .fixed-box strong{
+    .character-row{
+      margin-bottom:14px;
+    }
+
+    .character-row:last-child{
+      margin-bottom:0;
+    }
+
+    .character-title{
       display:block;
-      margin-bottom:4px;
+      margin-bottom:7px;
+      font-size:13px;
+      font-weight:800;
       color:#3730a3;
     }
 
@@ -186,6 +199,12 @@
     .btn-green{
       background:var(--green);
       color:#fff;
+    }
+
+    .btn-small{
+      padding:8px 10px;
+      border-radius:10px;
+      font-size:12px;
     }
 
     .badge-row{
@@ -386,7 +405,7 @@
       <h1>히포 교육 컷툰 자동생성기</h1>
       <p>
         줄거리와 대사를 입력하면 컷별 장면 구성, 대사 가이드, 이미지 생성 프롬프트를 자동으로 만들어주는 버전입니다.<br>
-        캐릭터 설정은 고정되어 있으며 모든 컷에서 동일하게 유지됩니다.
+        캐릭터 설정은 기본값을 제공하되, 필요에 따라 직접 수정할 수 있습니다.
       </p>
     </div>
 
@@ -443,22 +462,32 @@
           </div>
 
           <div class="section">
-            <label class="label">고정 캐릭터 설정</label>
-            <div class="fixed-box">
-              <strong>주인공</strong>
-              갈색 머리 / 남색 정장 + 흰 셔츠 + 넥타이 / 신입·직원 느낌 / 앉아서 듣거나 필기하는 역할
-              <br><br>
-              <strong>히포</strong>
-              파란색·하늘색 로봇형 마스코트 / 동그란 얼굴 / 귀처럼 보이는 헤드셋·안테나 / 귀엽고 친절한 표정
+            <label class="label">캐릭터 설정</label>
+
+            <div class="character-box">
+              <div class="character-row">
+                <span class="character-title">주인공 설정</span>
+                <textarea id="heroDesc" class="char-textarea">갈색 머리, 남색 정장 + 흰 셔츠 + 넥타이, 신입/직원 느낌, 성실하고 집중하는 표정</textarea>
+              </div>
+
+              <div class="character-row">
+                <span class="character-title">히포 설정</span>
+                <textarea id="hippoDesc" class="char-textarea">파란색·하늘색 로봇형 마스코트, 동그란 얼굴, 귀처럼 보이는 헤드셋/안테나, 귀엽고 친절한 표정</textarea>
+              </div>
+
+              <button type="button" class="btn-light btn-small" onclick="resetCharacters()">캐릭터 기본값 복원</button>
             </div>
-            <div class="hint">※ 이 캐릭터 설정은 프롬프트에 자동으로 고정 반영됩니다.</div>
+
+            <div class="hint">
+              ※ 여기에 입력한 캐릭터 설정이 모든 컷의 이미지 생성 프롬프트에 자동 반영됩니다.
+            </div>
           </div>
 
           <div class="section">
             <label class="label" for="plot">줄거리 / 장면 요약</label>
             <textarea id="plot" placeholder="예:
 히포가 복리후생에 대해 소개한다.
-주인공은 자리에 앉아 설명을 듣는다.
+주인공은 설명을 듣는다.
 히포가 업무환경 복리후생을 먼저 설명한다.
 이어서 행사 및 중대사 복리후생을 설명한다.
 마지막에는 주인공이 이해한 표정을 짓는다."></textarea>
@@ -498,7 +527,7 @@
           </div>
 
           <div class="badge-row">
-            <span class="badge">캐릭터 고정</span>
+            <span class="badge">캐릭터 수정 가능</span>
             <span class="badge">컷별 프롬프트 자동 생성</span>
             <span class="badge">복사 기능 보완</span>
           </div>
@@ -534,20 +563,23 @@
   <div id="toast" class="toast">복사되었습니다.</div>
 
   <script>
-    const STORAGE_KEY = "hipoCuttoonGeneratorData";
+    const STORAGE_KEY = "hipoCuttoonGeneratorDataEditableCharacters";
 
-    const FIXED_CHARACTERS = {
-      hero: {
-        name: "주인공",
-        desc: "갈색 머리, 남색 정장 + 흰 셔츠 + 넥타이, 신입/직원 느낌, 앉아서 듣거나 필기하는 역할, 성실하고 집중하는 표정"
-      },
-      hippo: {
-        name: "히포",
-        desc: "파란색·하늘색 로봇형 마스코트, 동그란 얼굴, 귀처럼 보이는 헤드셋/안테나, 귀엽고 친절한 표정"
-      }
-    };
+    const DEFAULT_HERO_DESC = "갈색 머리, 남색 정장 + 흰 셔츠 + 넥타이, 신입/직원 느낌, 성실하고 집중하는 표정";
+    const DEFAULT_HIPPO_DESC = "파란색·하늘색 로봇형 마스코트, 동그란 얼굴, 귀처럼 보이는 헤드셋/안테나, 귀엽고 친절한 표정";
 
-    const ids = ["title","cutCount","style","tone","ratio","plot","dialogues","message"];
+    const ids = [
+      "title",
+      "cutCount",
+      "style",
+      "tone",
+      "ratio",
+      "heroDesc",
+      "hippoDesc",
+      "plot",
+      "dialogues",
+      "message"
+    ];
 
     function showToast(message){
       const toast = document.getElementById("toast");
@@ -586,6 +618,13 @@
           }
         });
       }catch(e){}
+    }
+
+    function resetCharacters(){
+      document.getElementById("heroDesc").value = DEFAULT_HERO_DESC;
+      document.getElementById("hippoDesc").value = DEFAULT_HIPPO_DESC;
+      saveInputs();
+      showToast("캐릭터 기본값으로 복원되었습니다.");
     }
 
     function parseLines(text){
@@ -687,10 +726,20 @@
       return "전개";
     }
 
-    function buildFixedCharacterText(){
+    function getHeroDesc(){
+      const value = document.getElementById("heroDesc").value.trim();
+      return value || DEFAULT_HERO_DESC;
+    }
+
+    function getHippoDesc(){
+      const value = document.getElementById("hippoDesc").value.trim();
+      return value || DEFAULT_HIPPO_DESC;
+    }
+
+    function buildCharacterText(){
       return [
-        `- ${FIXED_CHARACTERS.hero.name}: ${FIXED_CHARACTERS.hero.desc}`,
-        `- ${FIXED_CHARACTERS.hippo.name}: ${FIXED_CHARACTERS.hippo.desc}`,
+        `- 주인공: ${getHeroDesc()}`,
+        `- 히포: ${getHippoDesc()}`,
         `- 모든 컷에서 두 캐릭터의 외형과 복장은 일관되게 유지한다.`
       ].join("\n");
     }
@@ -707,13 +756,12 @@
         `비율 참고: ${ratio}.`,
         `장면 설명: ${scene}`,
         `카메라/구도: ${camera}.`,
-        `등장인물 고정 설정:`,
-        buildFixedCharacterText(),
+        `등장인물 설정:`,
+        buildCharacterText(),
         `표현해야 할 대사/말풍선:`,
         dialogueText,
         `장면 전체는 읽기 쉬운 한국 웹툰 형식으로 표현하고, 부드럽고 정돈된 구성으로 연출.`,
-        `주인공은 신입/직원 느낌으로 주로 앉아서 듣거나 필기하는 자세를 유지.`,
-        `히포는 귀엽고 친절한 표정을 유지.`,
+        `캐릭터의 외형, 색감, 복장은 모든 컷에서 동일하게 유지.`,
         `마지막 전달 메시지와의 연결성 유지: ${message || "핵심 메시지를 자연스럽게 전달"}`
       ].join("\n");
     }
@@ -906,9 +954,8 @@
         `스타일: ${style}`,
         `톤: ${tone}`,
         `비율: ${ratio}`,
-        `고정 캐릭터: 주인공, 히포`,
-        `주인공 설정: ${FIXED_CHARACTERS.hero.desc}`,
-        `히포 설정: ${FIXED_CHARACTERS.hippo.desc}`,
+        `주인공 설정: ${getHeroDesc()}`,
+        `히포 설정: ${getHippoDesc()}`,
         message ? `핵심 메시지: ${message}` : `핵심 메시지: 입력 없음`
       ].join("\n");
 
@@ -950,6 +997,8 @@
       document.getElementById("style").value = "부드러운 파스텔 웹툰 스타일";
       document.getElementById("tone").value = "따뜻하고 부드러운 톤";
       document.getElementById("ratio").value = "세로형 9:16";
+      document.getElementById("heroDesc").value = DEFAULT_HERO_DESC;
+      document.getElementById("hippoDesc").value = DEFAULT_HIPPO_DESC;
       document.getElementById("plot").value = "";
       document.getElementById("dialogues").value = "";
       document.getElementById("message").value = "";
@@ -992,7 +1041,7 @@
           tone: "실무적이고 친절한 톤",
           ratio: "세로형 9:16",
           plot: `히포가 수습평가를 소개한다.
-주인공은 자리에 앉아 설명을 듣는다.
+주인공이 설명을 듣는다.
 히포가 평가 기준과 피드백 흐름을 설명한다.
 주인공이 이해한 표정을 짓는다.`,
           dialogues: `히포: 수습평가는 업무평가, 역량평가, 근태평가로 진행돼.
@@ -1026,7 +1075,7 @@
           tone: "따뜻하고 부드러운 톤",
           ratio: "세로형 9:16",
           plot: `히포가 회사 복리후생을 소개한다.
-주인공은 앉아서 설명을 듣는다.
+주인공이 설명을 듣는다.
 히포가 업무환경 복리후생을 설명한다.
 히포가 행사 및 중대사 복리후생을 설명한다.
 주인공이 이해한 표정을 짓는다.`,
