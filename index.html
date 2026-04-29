@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>히포 교육 컷툰 자동생성기</title>
+  <title>히포 컷툰 프롬프트 생성기</title>
   <style>
     :root{
       --bg:#f6f7fb;
@@ -14,6 +14,7 @@
       --primary:#4f46e5;
       --primary-soft:#eef2ff;
       --green:#10b981;
+      --dark:#111827;
       --shadow:0 10px 30px rgba(17,24,39,0.08);
       --radius:18px;
     }
@@ -33,9 +34,7 @@
       padding:24px;
     }
 
-    .header{
-      margin-bottom:20px;
-    }
+    .header{margin-bottom:20px}
 
     .header h1{
       margin:0 0 8px;
@@ -52,7 +51,7 @@
 
     .layout{
       display:grid;
-      grid-template-columns:420px 1fr;
+      grid-template-columns:minmax(420px, 480px) 1fr;
       gap:20px;
       align-items:start;
     }
@@ -64,30 +63,23 @@
       box-shadow:var(--shadow);
     }
 
-    .panel-inner{
-      padding:20px;
-    }
+    .panel-inner{padding:20px}
 
     .panel-title{
       margin:0 0 16px;
       font-size:18px;
-      font-weight:700;
+      font-weight:800;
     }
 
-    .section{
-      margin-bottom:18px;
-    }
-
-    .section:last-child{
-      margin-bottom:0;
-    }
+    .section{margin-bottom:18px}
+    .section:last-child{margin-bottom:0}
 
     .label{
       display:block;
       margin-bottom:8px;
       font-size:13px;
       color:#374151;
-      font-weight:700;
+      font-weight:800;
     }
 
     input[type="text"],
@@ -102,17 +94,13 @@
       background:#fff;
       color:var(--text);
       transition:border-color .2s ease, box-shadow .2s ease;
+      font-family:inherit;
     }
 
     textarea{
-      min-height:120px;
+      min-height:108px;
       resize:vertical;
       line-height:1.6;
-    }
-
-    .char-textarea{
-      min-height:92px;
-      background:#fcfcff;
     }
 
     input[type="text"]:focus,
@@ -142,13 +130,8 @@
       padding:14px;
     }
 
-    .character-row{
-      margin-bottom:14px;
-    }
-
-    .character-row:last-child{
-      margin-bottom:0;
-    }
+    .character-row{margin-bottom:14px}
+    .character-row:last-child{margin-bottom:0}
 
     .character-title{
       display:block;
@@ -156,6 +139,11 @@
       font-size:13px;
       font-weight:800;
       color:#3730a3;
+    }
+
+    .char-textarea{
+      min-height:84px;
+      background:#fcfcff;
     }
 
     .btn-row{
@@ -171,41 +159,19 @@
       border-radius:12px;
       padding:12px 16px;
       font-size:14px;
-      font-weight:700;
+      font-weight:800;
       cursor:pointer;
       transition:transform .05s ease, opacity .2s ease, background .2s ease;
+      font-family:inherit;
     }
 
-    button:active{
-      transform:translateY(1px);
-    }
+    button:active{transform:translateY(1px)}
 
-    .btn-primary{
-      background:var(--primary);
-      color:#fff;
-    }
-
-    .btn-dark{
-      background:#111827;
-      color:#fff;
-    }
-
-    .btn-light{
-      background:#f3f4f6;
-      color:#111827;
-      border:1px solid var(--line);
-    }
-
-    .btn-green{
-      background:var(--green);
-      color:#fff;
-    }
-
-    .btn-small{
-      padding:8px 10px;
-      border-radius:10px;
-      font-size:12px;
-    }
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-green{background:var(--green);color:#fff}
+    .btn-dark{background:var(--dark);color:#fff}
+    .btn-light{background:#f3f4f6;color:#111827;border:1px solid var(--line)}
+    .btn-small{padding:8px 10px;border-radius:10px;font-size:12px}
 
     .badge-row{
       display:flex;
@@ -221,24 +187,7 @@
       border-radius:999px;
       padding:6px 10px;
       font-size:12px;
-      font-weight:700;
-    }
-
-    .template-buttons{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:8px;
-    }
-
-    .template-btn{
-      background:#f8fafc;
-      border:1px solid var(--line);
-      color:#111827;
-      padding:8px 10px;
-      border-radius:10px;
-      font-size:12px;
-      font-weight:700;
+      font-weight:800;
     }
 
     .output-top{
@@ -261,7 +210,7 @@
     .summary-title{
       margin:0 0 10px;
       font-size:16px;
-      font-weight:700;
+      font-weight:800;
     }
 
     .summary-text{
@@ -272,45 +221,39 @@
       white-space:pre-wrap;
     }
 
-    .cut-grid{
+    .prompt-grid{
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:14px;
     }
 
-    .cut-card{
+    .prompt-card{
       border:1px solid var(--line);
       border-radius:16px;
       background:#fff;
       overflow:hidden;
     }
 
-    .cut-head{
+    .prompt-card-head{
       display:flex;
       justify-content:space-between;
+      gap:10px;
       align-items:center;
       padding:14px 16px;
       background:#f9fafb;
       border-bottom:1px solid var(--line);
-      gap:8px;
     }
 
-    .cut-head h3{
+    .prompt-card-head h3{
       margin:0;
       font-size:16px;
+      white-space:nowrap;
     }
 
-    .cut-body{
-      padding:16px;
-    }
+    .prompt-card-body{padding:16px}
 
-    .item{
-      margin-bottom:14px;
-    }
-
-    .item:last-child{
-      margin-bottom:0;
-    }
+    .item{margin-bottom:14px}
+    .item:last-child{margin-bottom:0}
 
     .item h4{
       margin:0 0 6px;
@@ -326,7 +269,7 @@
       white-space:pre-wrap;
     }
 
-    .prompt-box{
+    .prompt-result{
       background:#fcfcff;
       border:1px solid #dbe2ff;
       border-radius:12px;
@@ -337,16 +280,6 @@
       white-space:pre-wrap;
       max-height:360px;
       overflow:auto;
-    }
-
-    .copy-mini{
-      padding:8px 10px;
-      border-radius:10px;
-      background:#eef2ff;
-      color:var(--primary);
-      font-size:12px;
-      font-weight:700;
-      border:1px solid #c7d2fe;
     }
 
     .empty{
@@ -376,7 +309,7 @@
       padding:12px 16px;
       border-radius:999px;
       font-size:14px;
-      font-weight:700;
+      font-weight:800;
       opacity:0;
       pointer-events:none;
       transition:opacity .2s ease, transform .2s ease;
@@ -388,24 +321,24 @@
       transform:translateX(-50%) translateY(-4px);
     }
 
-    @media (max-width: 1024px){
-      .layout{
-        grid-template-columns:1fr;
-      }
+    @media (max-width: 1080px){
+      .layout{grid-template-columns:1fr}
+      .prompt-grid{grid-template-columns:1fr}
+    }
 
-      .cut-grid{
-        grid-template-columns:1fr;
-      }
+    @media (max-width: 720px){
+      .wrap{padding:16px}
+      .header h1{font-size:25px}
+      .grid-2{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="header">
-      <h1>히포 교육 컷툰 자동생성기</h1>
+      <h1>히포 컷툰 프롬프트 생성기</h1>
       <p>
-        줄거리와 대사를 입력하면 컷별 장면 구성, 대사 가이드, 이미지 생성 프롬프트를 자동으로 만들어주는 버전입니다.<br>
-        캐릭터 설정은 기본값을 제공하되, 필요에 따라 직접 수정할 수 있습니다.
+        컷 편집 기능 없이, 1컷부터 4컷·6컷·8컷까지 이미지 생성용 프롬프트만 깔끔하게 만들어주는 무료 HTML 단일 파일입니다.
       </p>
     </div>
 
@@ -416,19 +349,31 @@
 
           <div class="section">
             <label class="label" for="title">작품 제목</label>
-            <input type="text" id="title" placeholder="예: 지각 연락은 빠르게!" />
+            <input type="text" id="title" placeholder="예: 우리 회사 복리후생" />
           </div>
 
           <div class="section grid-2">
             <div>
               <label class="label" for="cutCount">컷 수</label>
               <select id="cutCount">
+                <option value="1">1컷</option>
                 <option value="4">4컷</option>
                 <option value="6">6컷</option>
                 <option value="8">8컷</option>
               </select>
             </div>
+            <div>
+              <label class="label" for="ratio">비율</label>
+              <select id="ratio">
+                <option value="세로형 9:16">세로형 9:16</option>
+                <option value="정사각형 1:1">정사각형 1:1</option>
+                <option value="세로형 4:5">세로형 4:5</option>
+                <option value="가로형 16:9">가로형 16:9</option>
+              </select>
+            </div>
+          </div>
 
+          <div class="section grid-2">
             <div>
               <label class="label" for="style">스타일</label>
               <select id="style">
@@ -438,9 +383,6 @@
                 <option value="밝은 일상 개그툰 스타일">밝은 일상 개그툰 스타일</option>
               </select>
             </div>
-          </div>
-
-          <div class="section grid-2">
             <div>
               <label class="label" for="tone">톤앤매너</label>
               <select id="tone">
@@ -450,48 +392,33 @@
                 <option value="유쾌하고 가벼운 톤">유쾌하고 가벼운 톤</option>
               </select>
             </div>
-
-            <div>
-              <label class="label" for="ratio">출력 비율</label>
-              <select id="ratio">
-                <option value="세로형 9:16">세로형 9:16</option>
-                <option value="정사각형 1:1">정사각형 1:1</option>
-                <option value="가로형 16:9">가로형 16:9</option>
-              </select>
-            </div>
           </div>
 
           <div class="section">
             <label class="label">캐릭터 설정</label>
-
             <div class="character-box">
               <div class="character-row">
                 <span class="character-title">주인공 설정</span>
                 <textarea id="heroDesc" class="char-textarea">갈색 머리, 남색 정장 + 흰 셔츠 + 넥타이, 신입/직원 느낌, 성실하고 집중하는 표정</textarea>
               </div>
-
               <div class="character-row">
                 <span class="character-title">히포 설정</span>
                 <textarea id="hippoDesc" class="char-textarea">파란색·하늘색 로봇형 마스코트, 동그란 얼굴, 귀처럼 보이는 헤드셋/안테나, 귀엽고 친절한 표정</textarea>
               </div>
-
               <button type="button" class="btn-light btn-small" onclick="resetCharacters()">캐릭터 기본값 복원</button>
             </div>
-
-            <div class="hint">
-              ※ 여기에 입력한 캐릭터 설정이 모든 컷의 이미지 생성 프롬프트에 자동 반영됩니다.
-            </div>
+            <div class="hint">※ 여기에 입력한 설정이 모든 컷의 프롬프트에 반영됩니다.</div>
           </div>
 
           <div class="section">
             <label class="label" for="plot">줄거리 / 장면 요약</label>
             <textarea id="plot" placeholder="예:
-히포가 복리후생에 대해 소개한다.
-주인공은 설명을 듣는다.
-히포가 업무환경 복리후생을 먼저 설명한다.
-이어서 행사 및 중대사 복리후생을 설명한다.
-마지막에는 주인공이 이해한 표정을 짓는다."></textarea>
-            <div class="hint">여러 줄로 나눠 적으면 컷별 장면 분배가 자연스러워집니다.</div>
+히포가 회사 복리후생을 소개한다.
+주인공이 설명을 듣는다.
+히포가 업무환경 복리후생을 설명한다.
+히포가 행사 및 중대사 복리후생을 설명한다.
+주인공이 이해한 표정을 짓는다."></textarea>
+            <div class="hint">여러 줄로 입력하면 컷별 장면에 순서대로 배정됩니다.</div>
           </div>
 
           <div class="section">
@@ -499,10 +426,8 @@
             <textarea id="dialogues" placeholder="예:
 히포: 우리 회사는 업무환경 복리후생과 행사·중대사 복리후생으로 나뉘어 있어.
 히포: 업무환경에는 10시 출근제, 듀얼모니터 지원, 커피와 스낵바가 있어.
-히포: 행사 및 중대사 복리후생에는 창립기념일 휴가와 경조사 지원이 있어.
-주인공: 복리후생 구성이 잘 정리되어 있어서 이해하기 쉬워요.
-나레이션: 복리후생은 구성원의 업무환경과 안정에 도움을 준다."></textarea>
-            <div class="hint">이름: 대사 형식으로 입력하면 컷별로 자동 배정됩니다.</div>
+주인공: 복리후생 구성이 잘 정리되어 있어서 이해하기 쉬워요."></textarea>
+            <div class="hint">이름: 대사 형식으로 입력하면 컷별 말풍선 문구로 정리됩니다.</div>
           </div>
 
           <div class="section">
@@ -510,31 +435,22 @@
             <input type="text" id="message" placeholder="예: 복리후생은 업무환경 지원과 행사·중대사 지원으로 구성된다." />
           </div>
 
-          <div class="section">
-            <label class="label">빠른 템플릿</label>
-            <div class="template-buttons">
-              <button type="button" class="template-btn" onclick="applyTemplate('attendance')">근태관리</button>
-              <button type="button" class="template-btn" onclick="applyTemplate('evaluation')">수습평가</button>
-              <button type="button" class="template-btn" onclick="applyTemplate('phone')">법인폰 에티켓</button>
-              <button type="button" class="template-btn" onclick="applyTemplate('welfare')">복리후생</button>
-            </div>
-          </div>
-
           <div class="btn-row">
-            <button class="btn-primary" onclick="generateCuttoon()">컷툰 자동생성</button>
-            <button class="btn-light" onclick="resetAll()">초기화</button>
-            <button class="btn-dark" onclick="copyAllResult()">전체 결과 복사</button>
+            <button type="button" class="btn-primary" onclick="generatePrompts()">프롬프트 생성</button>
+            <button type="button" class="btn-dark" onclick="copyAllPrompts()">전체 복사</button>
+            <button type="button" class="btn-green" onclick="downloadText()">TXT 저장</button>
+            <button type="button" class="btn-light" onclick="resetAll()">초기화</button>
           </div>
 
           <div class="badge-row">
+            <span class="badge">1컷 가능</span>
             <span class="badge">캐릭터 수정 가능</span>
-            <span class="badge">컷별 프롬프트 자동 생성</span>
-            <span class="badge">복사 기능 보완</span>
+            <span class="badge">프롬프트 복사</span>
+            <span class="badge">자동 저장</span>
           </div>
 
           <p class="footer-note">
-            ※ 현재 버전은 실제 이미지를 직접 생성하지 않고,<br>
-            컷 구성과 이미지 생성용 프롬프트를 자동 생성하는 1차 버전입니다.
+            ※ 이미지 생성 기능은 포함되어 있지 않습니다. 생성된 프롬프트를 복사해서 원하는 이미지 도구에 붙여넣어 사용하면 됩니다.
           </p>
         </div>
       </div>
@@ -544,15 +460,15 @@
           <div class="output-top">
             <h2 class="panel-title" style="margin:0;">생성 결과</h2>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn-green" onclick="copyAllResult()">전체 복사</button>
-              <button class="btn-light" onclick="downloadText()">TXT 저장</button>
+              <button type="button" class="btn-dark" onclick="copyAllPrompts()">전체 복사</button>
+              <button type="button" class="btn-green" onclick="downloadText()">TXT 저장</button>
             </div>
           </div>
 
           <div id="resultArea">
             <div class="empty">
-              아직 생성된 결과가 없습니다.<br>
-              왼쪽 입력란을 채운 뒤 <strong>컷툰 자동생성</strong> 버튼을 눌러 주세요.
+              아직 생성된 프롬프트가 없습니다.<br>
+              왼쪽 입력란을 채운 뒤 <strong>프롬프트 생성</strong>을 눌러 주세요.
             </div>
           </div>
         </div>
@@ -560,62 +476,47 @@
     </div>
   </div>
 
-  <div id="toast" class="toast">복사되었습니다.</div>
+  <div id="toast" class="toast">완료되었습니다.</div>
 
   <script>
-    const STORAGE_KEY = "hipoCuttoonGeneratorDataEditableCharacters";
+    "use strict";
 
+    const STORAGE_KEY = "hipoPromptGeneratorSimpleV2";
     const DEFAULT_HERO_DESC = "갈색 머리, 남색 정장 + 흰 셔츠 + 넥타이, 신입/직원 느낌, 성실하고 집중하는 표정";
     const DEFAULT_HIPPO_DESC = "파란색·하늘색 로봇형 마스코트, 동그란 얼굴, 귀처럼 보이는 헤드셋/안테나, 귀엽고 친절한 표정";
+    const NEWLINE = "\n";
 
-    const ids = [
-      "title",
-      "cutCount",
-      "style",
-      "tone",
-      "ratio",
-      "heroDesc",
-      "hippoDesc",
-      "plot",
-      "dialogues",
-      "message"
+    const saveIds = [
+      "title", "cutCount", "ratio", "style", "tone", "heroDesc", "hippoDesc", "plot", "dialogues", "message"
     ];
+
+    let generatedPrompts = [];
+    let generatedText = "";
 
     function showToast(message){
       const toast = document.getElementById("toast");
       toast.textContent = message;
       toast.classList.add("show");
-
-      setTimeout(()=>{
-        toast.classList.remove("show");
-      }, 1600);
+      setTimeout(function(){ toast.classList.remove("show"); }, 1500);
     }
 
-    function saveInputs(){
+    function saveData(){
       const data = {};
-
-      ids.forEach(id=>{
+      saveIds.forEach(function(id){
         const el = document.getElementById(id);
-        if(el){
-          data[id] = el.value;
-        }
+        if(el) data[id] = el.value;
       });
-
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
 
-    function loadInputs(){
+    function loadData(){
       const raw = localStorage.getItem(STORAGE_KEY);
       if(!raw) return;
-
       try{
         const data = JSON.parse(raw);
-
-        ids.forEach(id=>{
+        saveIds.forEach(function(id){
           const el = document.getElementById(id);
-          if(el && data[id] !== undefined){
-            el.value = data[id];
-          }
+          if(el && data[id] !== undefined) el.value = data[id];
         });
       }catch(e){}
     }
@@ -623,88 +524,84 @@
     function resetCharacters(){
       document.getElementById("heroDesc").value = DEFAULT_HERO_DESC;
       document.getElementById("hippoDesc").value = DEFAULT_HIPPO_DESC;
-      saveInputs();
+      saveData();
       showToast("캐릭터 기본값으로 복원되었습니다.");
     }
 
+    function resetAll(){
+      if(!confirm("입력값과 생성 결과를 초기화할까요?")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      document.getElementById("title").value = "";
+      document.getElementById("cutCount").value = "1";
+      document.getElementById("ratio").value = "세로형 9:16";
+      document.getElementById("style").value = "부드러운 파스텔 웹툰 스타일";
+      document.getElementById("tone").value = "따뜻하고 부드러운 톤";
+      document.getElementById("heroDesc").value = DEFAULT_HERO_DESC;
+      document.getElementById("hippoDesc").value = DEFAULT_HIPPO_DESC;
+      document.getElementById("plot").value = "";
+      document.getElementById("dialogues").value = "";
+      document.getElementById("message").value = "";
+      generatedPrompts = [];
+      generatedText = "";
+      document.getElementById("resultArea").innerHTML = [
+        '<div class="empty">',
+        '아직 생성된 프롬프트가 없습니다.<br>',
+        '왼쪽 입력란을 채운 뒤 <strong>프롬프트 생성</strong>을 눌러 주세요.',
+        '</div>'
+      ].join("");
+      showToast("초기화되었습니다.");
+    }
+
     function parseLines(text){
-      return text
-        .split("\n")
-        .map(v=>v.trim())
-        .filter(Boolean);
+      return String(text || "").split(/\r?\n/).map(function(v){
+        return v.trim();
+      }).filter(Boolean);
     }
 
     function parseDialogues(text){
-      const lines = parseLines(text);
-
-      return lines.map(line=>{
+      return parseLines(text).map(function(line){
         const idx = line.indexOf(":");
-
         if(idx > -1){
           return {
             speaker: line.slice(0, idx).trim(),
             text: line.slice(idx + 1).trim()
           };
         }
-
-        return {
-          speaker: "대사",
-          text: line
-        };
+        return { speaker:"대사", text:line };
       });
     }
 
     function splitScenes(plotLines, cutCount){
       if(plotLines.length === 0){
-        plotLines = [
-          "도입 장면",
-          "상황 설명",
-          "핵심 설명",
-          "이해와 정리",
-          "추가 설명",
-          "마무리"
-        ];
+        plotLines = ["도입 장면", "상황 설명", "핵심 설명", "이해와 정리", "추가 설명", "마무리"];
       }
 
       const scenes = [];
-
       for(let i = 0; i < cutCount; i++){
-        if(plotLines[i]){
-          scenes.push(plotLines[i]);
-        }else{
-          scenes.push(plotLines[plotLines.length - 1] || "장면");
-        }
+        if(plotLines[i]) scenes.push(plotLines[i]);
+        else if(i === cutCount - 1) scenes.push("핵심 메시지를 강조하며 마무리한다.");
+        else scenes.push(plotLines[plotLines.length - 1] || "장면");
       }
-
-      if(plotLines.length < cutCount){
-        for(let i = plotLines.length; i < cutCount; i++){
-          if(i === cutCount - 1){
-            scenes[i] = "핵심 메시지를 강조하며 마무리한다.";
-          }else{
-            scenes[i] = scenes[i] || "앞선 장면을 자연스럽게 이어서 보여준다.";
-          }
-        }
-      }
-
       return scenes;
     }
 
     function distributeDialogues(dialogues, cutCount){
-      const result = Array.from({length: cutCount}, ()=>[]);
-
-      if(dialogues.length === 0){
-        return result;
-      }
-
-      dialogues.forEach((d, idx)=>{
-        const cutIndex = Math.min(idx, cutCount - 1);
-        result[cutIndex].push(d);
+      const result = Array.from({length: cutCount}, function(){ return []; });
+      dialogues.forEach(function(d, idx){
+        result[Math.min(idx, cutCount - 1)].push(d);
       });
-
       return result;
     }
 
-    function getCameraByIndex(i, total){
+    function getRoleByIndex(i, total){
+      if(total === 1) return "단일 컷";
+      if(i === 0) return "도입";
+      if(i === total - 1) return "마무리";
+      if(i === Math.floor(total / 2)) return "핵심 전환";
+      return "전개";
+    }
+
+    function getCameraByIndex(i){
       const list = [
         "상황을 보여주는 와이드 샷",
         "설명이 잘 보이는 미디엄 샷",
@@ -715,38 +612,22 @@
         "정리 메시지를 보여주는 안정적인 구도",
         "엔딩용 정돈된 프레임"
       ];
-
       return list[i] || list[list.length - 1];
     }
 
-    function getRoleByIndex(i, total){
-      if(i === 0) return "도입";
-      if(i === total - 1) return "마무리";
-      if(i === Math.floor(total / 2)) return "핵심 전환";
-      return "전개";
-    }
-
-    function getHeroDesc(){
-      const value = document.getElementById("heroDesc").value.trim();
-      return value || DEFAULT_HERO_DESC;
-    }
-
-    function getHippoDesc(){
-      const value = document.getElementById("hippoDesc").value.trim();
-      return value || DEFAULT_HIPPO_DESC;
-    }
-
-    function buildCharacterText(){
+    function getCharacterText(){
+      const hero = document.getElementById("heroDesc").value.trim() || DEFAULT_HERO_DESC;
+      const hippo = document.getElementById("hippoDesc").value.trim() || DEFAULT_HIPPO_DESC;
       return [
-        `- 주인공: ${getHeroDesc()}`,
-        `- 히포: ${getHippoDesc()}`,
-        `- 모든 컷에서 두 캐릭터의 외형과 복장은 일관되게 유지한다.`
-      ].join("\n");
+        `- 주인공: ${hero}`,
+        `- 히포: ${hippo}`,
+        "- 모든 컷에서 두 캐릭터의 외형과 복장은 일관되게 유지한다."
+      ].join(NEWLINE);
     }
 
     function buildPrompt(cutNumber, scene, dialogues, style, tone, ratio, message, camera){
       const dialogueText = dialogues.length
-        ? dialogues.map(d => `${d.speaker} 말풍선: "${d.text}"`).join("\n")
+        ? dialogues.map(function(d){ return `${d.speaker} 말풍선: "${d.text}"`; }).join(NEWLINE)
         : "대사는 없거나 최소화한다.";
 
       return [
@@ -756,196 +637,41 @@
         `비율 참고: ${ratio}.`,
         `장면 설명: ${scene}`,
         `카메라/구도: ${camera}.`,
-        `등장인물 설정:`,
-        buildCharacterText(),
-        `표현해야 할 대사/말풍선:`,
+        "등장인물 설정:",
+        getCharacterText(),
+        "표현해야 할 대사/말풍선:",
         dialogueText,
-        `장면 전체는 읽기 쉬운 한국 웹툰 형식으로 표현하고, 부드럽고 정돈된 구성으로 연출.`,
-        `캐릭터의 외형, 색감, 복장은 모든 컷에서 동일하게 유지.`,
+        "장면 전체는 읽기 쉬운 한국 웹툰 형식으로 표현하고, 부드럽고 정돈된 구성으로 연출.",
+        "캐릭터의 외형, 색감, 복장은 모든 컷에서 동일하게 유지.",
         `마지막 전달 메시지와의 연결성 유지: ${message || "핵심 메시지를 자연스럽게 전달"}`
-      ].join("\n");
+      ].join(NEWLINE);
     }
 
-    function escapeHtml(str){
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-    }
-
-    function copyText(text){
-      if(!text){
-        alert("복사할 내용이 없습니다.");
-        return;
-      }
-
-      if(navigator.clipboard && window.isSecureContext){
-        navigator.clipboard.writeText(text)
-          .then(()=>{
-            showToast("복사되었습니다.");
-          })
-          .catch(()=>{
-            fallbackCopyText(text);
-          });
-      }else{
-        fallbackCopyText(text);
-      }
-    }
-
-    function fallbackCopyText(text){
-      const textarea = document.createElement("textarea");
-      textarea.value = text;
-
-      textarea.style.position = "fixed";
-      textarea.style.top = "0";
-      textarea.style.left = "0";
-      textarea.style.width = "1px";
-      textarea.style.height = "1px";
-      textarea.style.padding = "0";
-      textarea.style.border = "none";
-      textarea.style.outline = "none";
-      textarea.style.boxShadow = "none";
-      textarea.style.background = "transparent";
-      textarea.style.opacity = "0";
-
-      document.body.appendChild(textarea);
-
-      textarea.focus();
-      textarea.select();
-      textarea.setSelectionRange(0, textarea.value.length);
-
-      let successful = false;
-
-      try{
-        successful = document.execCommand("copy");
-      }catch(err){
-        successful = false;
-      }
-
-      document.body.removeChild(textarea);
-
-      if(successful){
-        showToast("복사되었습니다.");
-      }else{
-        alert("자동 복사에 실패했습니다. 결과 내용을 직접 드래그해서 복사해 주세요.");
-      }
-    }
-
-    function copyCutPrompt(index){
-      const el = document.getElementById(`prompt-${index}`);
-
-      if(el){
-        copyText(el.innerText);
-      }
-    }
-
-    function buildAllResultText(summaryText, cuts){
-      let text = `[컷툰 자동생성 결과]\n\n`;
-      text += `${summaryText}\n\n`;
-
-      cuts.forEach(cut=>{
-        text += `----------------------------------\n`;
-        text += `${cut.cutNo}컷\n`;
-        text += `역할: ${cut.role}\n`;
-        text += `장면 설명: ${cut.scene}\n`;
-        text += `구도/연출: ${cut.camera}\n`;
-        text += `대사 가이드:\n${cut.speechGuide}\n\n`;
-        text += `이미지 생성 프롬프트:\n${cut.prompt}\n\n`;
-      });
-
-      return text;
-    }
-
-    function renderResult(title, summaryText, cuts){
-      const resultArea = document.getElementById("resultArea");
-
-      let html = `
-        <div class="summary-box">
-          <h3 class="summary-title">${escapeHtml(title)}</h3>
-          <p class="summary-text">${escapeHtml(summaryText)}</p>
-        </div>
-        <div class="cut-grid">
-      `;
-
-      cuts.forEach((cut, idx)=>{
-        html += `
-          <div class="cut-card">
-            <div class="cut-head">
-              <h3>${cut.cutNo}컷</h3>
-              <button class="copy-mini" onclick="copyCutPrompt(${idx})">프롬프트 복사</button>
-            </div>
-
-            <div class="cut-body">
-              <div class="item">
-                <h4>컷 역할</h4>
-                <p>${escapeHtml(cut.role)}</p>
-              </div>
-
-              <div class="item">
-                <h4>장면 설명</h4>
-                <p>${escapeHtml(cut.scene)}</p>
-              </div>
-
-              <div class="item">
-                <h4>구도 / 연출</h4>
-                <p>${escapeHtml(cut.camera)}</p>
-              </div>
-
-              <div class="item">
-                <h4>말풍선 / 대사 가이드</h4>
-                <p>${escapeHtml(cut.speechGuide)}</p>
-              </div>
-
-              <div class="item">
-                <h4>이미지 생성 프롬프트</h4>
-                <div class="prompt-box" id="prompt-${idx}">${escapeHtml(cut.prompt)}</div>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-
-      html += `</div>`;
-
-      resultArea.innerHTML = html;
-      window.__cuttoonResultText = buildAllResultText(summaryText, cuts);
-    }
-
-    function generateCuttoon(){
-      saveInputs();
+    function generatePrompts(){
+      saveData();
 
       const title = document.getElementById("title").value.trim() || "제목 미정";
-      const cutCount = Number(document.getElementById("cutCount").value);
+      const cutCount = Number(document.getElementById("cutCount").value || 1);
+      const ratio = document.getElementById("ratio").value;
       const style = document.getElementById("style").value;
       const tone = document.getElementById("tone").value;
-      const ratio = document.getElementById("ratio").value;
-      const plotLines = parseLines(document.getElementById("plot").value.trim());
-      const dialogues = parseDialogues(document.getElementById("dialogues").value.trim());
+      const plotLines = parseLines(document.getElementById("plot").value);
+      const dialogues = parseDialogues(document.getElementById("dialogues").value);
       const message = document.getElementById("message").value.trim();
 
       const scenes = splitScenes(plotLines, cutCount);
-      const distributedDialogues = distributeDialogues(dialogues, cutCount);
+      const distributed = distributeDialogues(dialogues, cutCount);
 
-      const cuts = scenes.map((scene, idx)=>{
+      generatedPrompts = scenes.map(function(scene, idx){
         const cutNo = idx + 1;
         const role = getRoleByIndex(idx, cutCount);
-        const camera = getCameraByIndex(idx, cutCount);
-        const cutDialogues = distributedDialogues[idx];
-
-        const speechGuide = cutDialogues.length
-          ? cutDialogues.map(d => `${d.speaker}: ${d.text}`).join("\n")
+        const camera = getCameraByIndex(idx);
+        const speechGuide = distributed[idx].length
+          ? distributed[idx].map(function(d){ return `${d.speaker}: ${d.text}`; }).join(NEWLINE)
           : "필요 시 짧은 리액션 또는 무대사 처리";
+        const prompt = buildPrompt(cutNo, scene, distributed[idx], style, tone, ratio, message, camera);
 
-        const prompt = buildPrompt(cutNo, scene, cutDialogues, style, tone, ratio, message, camera);
-
-        return {
-          cutNo,
-          role,
-          scene,
-          camera,
-          speechGuide,
-          prompt
-        };
+        return { cutNo, role, scene, camera, speechGuide, prompt };
       });
 
       const summaryText = [
@@ -954,165 +680,168 @@
         `스타일: ${style}`,
         `톤: ${tone}`,
         `비율: ${ratio}`,
-        `주인공 설정: ${getHeroDesc()}`,
-        `히포 설정: ${getHippoDesc()}`,
-        message ? `핵심 메시지: ${message}` : `핵심 메시지: 입력 없음`
-      ].join("\n");
+        `주인공 설정: ${document.getElementById("heroDesc").value.trim() || DEFAULT_HERO_DESC}`,
+        `히포 설정: ${document.getElementById("hippoDesc").value.trim() || DEFAULT_HIPPO_DESC}`,
+        message ? `핵심 메시지: ${message}` : "핵심 메시지: 입력 없음"
+      ].join(NEWLINE);
 
-      renderResult(title, summaryText, cuts);
+      renderResult(title, summaryText, generatedPrompts);
+      generatedText = buildAllText(summaryText, generatedPrompts);
+      showToast("프롬프트가 생성되었습니다.");
     }
 
-    function copyAllResult(){
-      if(!window.__cuttoonResultText){
-        alert("먼저 컷툰을 생성해 주세요.");
+    function renderResult(title, summaryText, prompts){
+      const resultArea = document.getElementById("resultArea");
+      let html = [
+        '<div class="summary-box">',
+        `<h3 class="summary-title">${escapeHtml(title)}</h3>`,
+        `<p class="summary-text">${escapeHtml(summaryText)}</p>`,
+        '</div>',
+        '<div class="prompt-grid">'
+      ].join("");
+
+      prompts.forEach(function(item, idx){
+        html += [
+          '<div class="prompt-card">',
+          '<div class="prompt-card-head">',
+          `<h3>${item.cutNo}컷 · ${escapeHtml(item.role)}</h3>`,
+          `<button type="button" class="btn-light btn-small" onclick="copyOnePrompt(${idx})">복사</button>`,
+          '</div>',
+          '<div class="prompt-card-body">',
+          '<div class="item">',
+          '<h4>장면 설명</h4>',
+          `<p>${escapeHtml(item.scene)}</p>`,
+          '</div>',
+          '<div class="item">',
+          '<h4>구도 / 연출</h4>',
+          `<p>${escapeHtml(item.camera)}</p>`,
+          '</div>',
+          '<div class="item">',
+          '<h4>대사 가이드</h4>',
+          `<p>${escapeHtml(item.speechGuide)}</p>`,
+          '</div>',
+          '<div class="item">',
+          '<h4>이미지 생성 프롬프트</h4>',
+          `<div class="prompt-result" id="prompt-${idx}">${escapeHtml(item.prompt)}</div>`,
+          '</div>',
+          '</div>',
+          '</div>'
+        ].join("");
+      });
+
+      html += '</div>';
+      resultArea.innerHTML = html;
+    }
+
+    function buildAllText(summaryText, prompts){
+      let text = `[히포 컷툰 프롬프트 생성 결과]${NEWLINE}${NEWLINE}${summaryText}${NEWLINE}${NEWLINE}`;
+      prompts.forEach(function(item){
+        text += `----------------------------------${NEWLINE}`;
+        text += `${item.cutNo}컷 · ${item.role}${NEWLINE}`;
+        text += `장면 설명: ${item.scene}${NEWLINE}`;
+        text += `구도/연출: ${item.camera}${NEWLINE}`;
+        text += `대사 가이드:${NEWLINE}${item.speechGuide}${NEWLINE}${NEWLINE}`;
+        text += `이미지 생성 프롬프트:${NEWLINE}${item.prompt}${NEWLINE}${NEWLINE}`;
+      });
+      return text;
+    }
+
+    function copyOnePrompt(idx){
+      if(!generatedPrompts[idx]) return;
+      copyText(generatedPrompts[idx].prompt);
+    }
+
+    function copyAllPrompts(){
+      if(!generatedText){
+        alert("먼저 프롬프트를 생성해 주세요.");
         return;
       }
-
-      copyText(window.__cuttoonResultText);
+      copyText(generatedText);
     }
 
     function downloadText(){
-      if(!window.__cuttoonResultText){
-        alert("먼저 컷툰을 생성해 주세요.");
+      if(!generatedText){
+        alert("먼저 프롬프트를 생성해 주세요.");
         return;
       }
-
-      const blob = new Blob([window.__cuttoonResultText], {
-        type:"text/plain;charset=utf-8"
-      });
-
+      const title = document.getElementById("title").value.trim() || "hipo-cuttoon-prompt";
+      const blob = new Blob([generatedText], {type:"text/plain;charset=utf-8"});
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = "cuttoon-result.txt";
+      a.download = `${safeFileName(title)}.txt`;
       a.click();
-
       URL.revokeObjectURL(a.href);
     }
 
-    function resetAll(){
-      if(!confirm("입력값과 생성 결과를 모두 초기화할까요?")) return;
-
-      document.getElementById("title").value = "";
-      document.getElementById("cutCount").value = "4";
-      document.getElementById("style").value = "부드러운 파스텔 웹툰 스타일";
-      document.getElementById("tone").value = "따뜻하고 부드러운 톤";
-      document.getElementById("ratio").value = "세로형 9:16";
-      document.getElementById("heroDesc").value = DEFAULT_HERO_DESC;
-      document.getElementById("hippoDesc").value = DEFAULT_HIPPO_DESC;
-      document.getElementById("plot").value = "";
-      document.getElementById("dialogues").value = "";
-      document.getElementById("message").value = "";
-
-      localStorage.removeItem(STORAGE_KEY);
-      window.__cuttoonResultText = "";
-
-      document.getElementById("resultArea").innerHTML = `
-        <div class="empty">
-          아직 생성된 결과가 없습니다.<br>
-          왼쪽 입력란을 채운 뒤 <strong>컷툰 자동생성</strong> 버튼을 눌러 주세요.
-        </div>
-      `;
+    function safeFileName(name){
+      return name.replace(/[\\/:*?"<>|]/g, "_").slice(0, 80);
     }
 
-    function applyTemplate(type){
-      const templates = {
-        attendance: {
-          title: "지각 연락은 빠르게!",
-          cutCount: "4",
-          style: "귀여운 사내교육 만화 스타일",
-          tone: "교육용으로 또렷한 톤",
-          ratio: "세로형 9:16",
-          plot: `비 오는 날, 주인공이 출근 중이다.
-차가 막혀 늦을 것 같아 걱정한다.
-히포가 빠른 공유의 중요성을 알려준다.
-주인공이 즉시 연락한다.
-빠른 공유의 중요성을 강조하며 마무리한다.`,
-          dialogues: `주인공: 안녕하세요, 전임님. 차가 막혀서 10~15분 늦을 것 같습니다.
-히포: 연락을 늦추지 말고 즉시 공유하는 것이 좋아!
-주인공: 네, 바로 말씀드리겠습니다.
-나레이션: 빠른 공유는 동료들의 업무 조율에 도움이 된다.`,
-          message: "지각이 예상되면 즉시 공유한다."
-        },
-
-        evaluation: {
-          title: "수습평가 안내",
-          cutCount: "4",
-          style: "깔끔한 한국 웹툰 스타일",
-          tone: "실무적이고 친절한 톤",
-          ratio: "세로형 9:16",
-          plot: `히포가 수습평가를 소개한다.
-주인공이 설명을 듣는다.
-히포가 평가 기준과 피드백 흐름을 설명한다.
-주인공이 이해한 표정을 짓는다.`,
-          dialogues: `히포: 수습평가는 업무평가, 역량평가, 근태평가로 진행돼.
-히포: 각 평가마다 피드백 면담도 함께 진행될 거야.
-주인공: 기준이 명확해서 이해하기 쉬워요.
-나레이션: 명확한 기준과 피드백은 적응에 도움을 준다.`,
-          message: "수습평가는 명확한 기준과 피드백으로 진행된다."
-        },
-
-        phone: {
-          title: "법인폰 사용 에티켓",
-          cutCount: "4",
-          style: "밝은 일상 개그툰 스타일",
-          tone: "따뜻하고 부드러운 톤",
-          ratio: "세로형 9:16",
-          plot: `주인공이 법인폰을 확인한다.
-히포가 응대 태도를 안내한다.
-주인공이 예의 있게 응대한다.
-법인폰 응대의 중요성을 정리한다.`,
-          dialogues: `히포: 법인폰 응대는 회사의 첫인상이 될 수 있어.
-주인공: 안녕하세요, 히포케이메논입니다.
-히포: 짧고 명확하게, 그리고 예의 있게 응대하면 좋아!
-나레이션: 작은 응대 하나가 회사 이미지를 만든다.`,
-          message: "법인폰 응대는 예의 있고 명확하게 한다."
-        },
-
-        welfare: {
-          title: "우리 회사 복리후생",
-          cutCount: "4",
-          style: "부드러운 파스텔 웹툰 스타일",
-          tone: "따뜻하고 부드러운 톤",
-          ratio: "세로형 9:16",
-          plot: `히포가 회사 복리후생을 소개한다.
-주인공이 설명을 듣는다.
-히포가 업무환경 복리후생을 설명한다.
-히포가 행사 및 중대사 복리후생을 설명한다.
-주인공이 이해한 표정을 짓는다.`,
-          dialogues: `히포: 우리 회사는 업무환경 복리후생과 행사·중대사 복리후생으로 나뉘어 있어.
-히포: 업무환경에는 10시 출근제, 듀얼모니터 지원, 커피와 스낵바가 있어.
-히포: 행사 및 중대사 복리후생에는 창립기념일 휴가와 경조사 지원이 있어.
-주인공: 복리후생 구성이 잘 정리되어 있어서 이해하기 쉬워요.
-나레이션: 복리후생은 구성원의 업무환경과 안정에 도움을 준다.`,
-          message: "복리후생은 업무환경 지원과 행사·중대사 지원으로 구성된다."
-        }
-      };
-
-      const t = templates[type];
-      if(!t) return;
-
-      document.getElementById("title").value = t.title;
-      document.getElementById("cutCount").value = t.cutCount;
-      document.getElementById("style").value = t.style;
-      document.getElementById("tone").value = t.tone;
-      document.getElementById("ratio").value = t.ratio;
-      document.getElementById("plot").value = t.plot;
-      document.getElementById("dialogues").value = t.dialogues;
-      document.getElementById("message").value = t.message;
-
-      saveInputs();
-      showToast("템플릿이 적용되었습니다.");
+    function copyText(text){
+      if(!text){ alert("복사할 내용이 없습니다."); return; }
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(text).then(function(){
+          showToast("복사되었습니다.");
+        }).catch(function(){
+          fallbackCopyText(text);
+        });
+      }else{
+        fallbackCopyText(text);
+      }
     }
 
-    window.addEventListener("DOMContentLoaded", ()=>{
-      loadInputs();
+    function fallbackCopyText(text){
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.top = "0";
+      textarea.style.left = "0";
+      textarea.style.width = "1px";
+      textarea.style.height = "1px";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      textarea.setSelectionRange(0, textarea.value.length);
+      let successful = false;
+      try{ successful = document.execCommand("copy"); }catch(e){ successful = false; }
+      document.body.removeChild(textarea);
+      if(successful) showToast("복사되었습니다.");
+      else alert("자동 복사에 실패했습니다. 직접 드래그해서 복사해 주세요.");
+    }
 
-      ids.forEach(id=>{
+    function escapeHtml(str){
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function assertEqual(name, actual, expected){
+      if(actual !== expected){
+        throw new Error(`${name} 실패: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+      }
+    }
+
+    function runTests(){
+      assertEqual("parseLines LF", parseLines("a\nb").length, 2);
+      assertEqual("parseLines CRLF", parseLines("a\r\nb").length, 2);
+      assertEqual("parseDialogues speaker", parseDialogues("히포: 안녕")[0].speaker, "히포");
+      assertEqual("splitScenes one cut", splitScenes(["장면1"], 1)[0], "장면1");
+      assertEqual("distributeDialogues overflow", distributeDialogues([{speaker:"A", text:"1"},{speaker:"B", text:"2"}], 1)[0].length, 2);
+      assertEqual("safeFileName", safeFileName('a/b:c*').includes("/"), false);
+      console.log("히포 컷툰 프롬프트 생성기 테스트 통과");
+    }
+
+    window.addEventListener("DOMContentLoaded", function(){
+      runTests();
+      loadData();
+      saveIds.forEach(function(id){
         const el = document.getElementById(id);
-
         if(el){
-          el.addEventListener("input", saveInputs);
-          el.addEventListener("change", saveInputs);
+          el.addEventListener("input", saveData);
+          el.addEventListener("change", saveData);
         }
       });
     });
